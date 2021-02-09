@@ -53,9 +53,11 @@ class ShellEngine(Engine):
         if self._log is None:
             # set up a very basic logger, assuming it will be overridden
             self._log = logging.getLogger("tank.tk-shell")
-            self._log.setLevel(logging.INFO)
-            self._stream_handler = logging.StreamHandler()
-            formatter = logging.Formatter()
+            self._log.setLevel(os.getenv("TK_SHELL_LOGGING_LEVEL", logging.INFO))
+            self._stream_handler = logging.StreamHandler(
+                sys.stdout if "TK_SHELL_LOGGING_STDOUT" in os.environ else None
+            )
+            formatter = logging.Formatter(os.getenv("TK_SHELL_LOGGING_FORMATTER"))
             self._stream_handler.setFormatter(formatter)
             self._log.addHandler(self._stream_handler)
 
